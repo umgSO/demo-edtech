@@ -10,7 +10,7 @@ const PRACTICA_URL =
     ? 'https://nxdqpgfn-5173.use2.devtunnels.ms'
     : window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
       ? `http://${window.location.hostname}:5173`
-      : null)
+      : '/practica/index.html')
 
 /* ---------- Iconos ---------- */
 const ICONOS = {
