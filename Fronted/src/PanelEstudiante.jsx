@@ -2,9 +2,13 @@ import { useState, useEffect } from 'react'
 import { ESTUDIANTE, MATERIAS, TAREAS_INICIALES, EVENTOS, AVISOS_INICIALES, HOY } from './dataEstudiante'
 import './PanelEstudiante.css'
 
-const PRACTICA_URL = window.location.hostname.includes('devtunnels.ms')
-  ? 'https://nxdqpgfn-5173.use2.devtunnels.ms'
-  : `http://${window.location.hostname}:5173`
+const PRACTICA_URL = import.meta.env.VITE_PRACTICA_URL || (
+  window.location.hostname.includes('devtunnels.ms')
+    ? 'https://nxdqpgfn-5173.use2.devtunnels.ms'
+    : (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+      ? `http://${window.location.hostname}:5173`
+      : null
+)
 
 /* ---------- Iconos ---------- */
 const ICONOS = {
@@ -383,7 +387,7 @@ export default function PanelEstudiante({ onSalir }) {
     return () => window.removeEventListener('keydown', alTeclear)
   }, [menu])
 
-  if (enPractica) {
+  if (enPractica && PRACTICA_URL) {
     return (
       <div style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'var(--selva-900)', display: 'flex', flexDirection: 'column' }}>
         <div style={{ background: 'var(--selva-800)', padding: '10px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
