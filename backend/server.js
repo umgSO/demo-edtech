@@ -7,6 +7,14 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+const API_KEY = process.env.API_KEY;
+
+app.use((req, res, next) => {
+  const key = req.headers['x-api-key'] || req.query.api_key;
+  if (!API_KEY || key === API_KEY) return next();
+  return res.status(401).json({ error: 'API key inválida' });
+});
+
 // Cargar el tema desde el JSON
 const temaPath = path.join(__dirname, 'ecuaciones_1ro_basico.json');
 const temaData = JSON.parse(fs.readFileSync(temaPath, 'utf8'));

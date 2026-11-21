@@ -65,7 +65,7 @@ export default function MonitorEnVivo() {
             color: "#fff",
           }}
         >
-          {resumen.activo ? "Tema HABILITADO ?" : "Tema PAUSADO ?"}
+          {resumen.activo ? "Tema HABILITADO " : "Tema PAUSADO ?"}
         </button>
       </div>
 
