@@ -1,0 +1,77 @@
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Figtree:wght@400;500;600&display=swap');
+
+:root {
+  /* Paleta: selva de noche y fauna de Guatemala */
+  --selva-900: #11160f;
+  --selva-800: #1a2117;
+  --selva-700: #283326;
+  --hueso: #efe9da;
+  --musgo: #9ba58f;
+  --jaguar: #d9a441;   /* acento del inicio */
+  --zorro: #e8873a;
+  --quetzal: #4fb783;
+  --guacamaya: #4c8fd6;
+
+  --fuente-titulo: 'Bricolage Grotesque', 'Trebuchet MS', sans-serif;
+  --fuente-texto: 'Figtree', system-ui, sans-serif;
+
+  color-scheme: dark;
+  font-family: var(--fuente-texto);
+  color: var(--hueso);
+  background: var(--selva-900);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--selva-900);
+}
+
+button, input { font: inherit; color: inherit; }
+
+:focus-visible {
+  outline: 3px solid var(--hueso);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}
+
+/* ---------- Pantalla de entrada ---------- */
+.bv {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 24px;
+  text-align: center;
+}
+.bv-huella { font-size: 2.6rem; }
+.bv h1 {
+  margin: 8px 0 28px;
+  font-family: var(--fuente-titulo);
+  font-size: clamp(1.8rem, 6vw, 2.4rem);
+}
+.bv-opciones { display: grid; gap: 14px; width: min(100%, 440px); }
+.bv-opcion {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 20px;
+  border: 0;
+  border-left: 6px solid var(--color);
+  border-radius: 14px;
+  background: var(--selva-800);
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.bv-opcion:hover { background: var(--selva-700); }
+.bv-emoji { font-size: 2.4rem; }
+.bv-texto { display: flex; flex-direction: column; }
+.bv-texto strong { font-family: var(--fuente-titulo); font-size: 1.3rem; }
+.bv-texto span { color: var(--musgo); }
