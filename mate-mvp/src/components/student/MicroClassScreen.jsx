@@ -1,7 +1,11 @@
 import { useState } from "react";
 import { AlertCircle, CheckCircle2, Lightbulb, ArrowRight } from "lucide-react";
 
-export default function MicroClassScreen({ detectedErrors, microClases, onFinish }) {
+export default function MicroClassScreen({
+  detectedErrors,
+  microClases,
+  onFinish,
+}) {
   const [idx, setIdx] = useState(0);
   const [selected, setSelected] = useState(null);
   const [showHint, setShowHint] = useState(false);
@@ -9,14 +13,12 @@ export default function MicroClassScreen({ detectedErrors, microClases, onFinish
   const errorId = detectedErrors[idx];
   const clase = microClases[errorId] || Object.values(microClases)[0];
 
-  // Compatible con pasos_visuales (array) o ejemplo_visual (string de P1)
   const pasos = Array.isArray(clase.pasos_visuales)
     ? clase.pasos_visuales
     : clase.ejemplo_visual
     ? [clase.ejemplo_visual]
     : [];
 
-  // Compatible con opciones (array) o { correcta, distractor } de P1
   const pg = clase.practica_guiada || {};
   const opciones = Array.isArray(pg.opciones)
     ? pg.opciones
@@ -40,8 +42,8 @@ export default function MicroClassScreen({ detectedErrors, microClases, onFinish
   return (
     <div className="flex-1 p-5 flex flex-col justify-between gap-5">
       <div className="space-y-4">
-        <div className="flex items-center justify-between text-xs font-semibold text-slate-500">
-          <span className="text-amber-600 flex items-center gap-1">
+        <div className="flex items-center justify-between text-xs font-semibold text-musgo">
+          <span className="text-jaguar flex items-center gap-1.5">
             <AlertCircle className="w-4 h-4" /> Refuerzo dirigido
           </span>
           <span>
@@ -49,18 +51,19 @@ export default function MicroClassScreen({ detectedErrors, microClases, onFinish
           </span>
         </div>
 
-        {/* Tarjeta de teoría */}
-        <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-3">
-          <span className="inline-block bg-red-50 text-red-700 text-xs font-semibold px-2.5 py-1 rounded-full">
+        <div className="bg-selva-800 border border-selva-700 rounded-2xl p-5 space-y-3">
+          <span className="inline-block bg-zorro/15 text-zorro text-xs font-semibold px-3 py-1 rounded-full">
             Detectamos dificultad en: {clase.nombre_corto || errorId}
           </span>
-          <h2 className="text-xl font-bold text-slate-800">{clase.titulo}</h2>
-          <p className="text-sm text-slate-600 leading-relaxed">
+          <h2 className="font-titulo text-xl font-bold text-hueso">
+            {clase.titulo}
+          </h2>
+          <p className="text-sm text-musgo leading-relaxed">
             {clase.explicacion}
           </p>
 
           {pasos.length > 0 && (
-            <div className="bg-slate-900 text-emerald-300 font-mono text-sm rounded-xl p-4 space-y-1.5">
+            <div className="bg-selva-900 border border-selva-700 text-quetzal font-mono text-sm rounded-xl p-4 space-y-1.5">
               {pasos.map((paso, i) => (
                 <p key={i}>{paso}</p>
               ))}
@@ -68,23 +71,21 @@ export default function MicroClassScreen({ detectedErrors, microClases, onFinish
           )}
         </div>
 
-        {/* Práctica guiada */}
-        <div className="bg-blue-50 border border-blue-200 rounded-2xl p-5 space-y-3">
-          <p className="text-xs font-bold uppercase tracking-wider text-blue-700">
+        <div className="bg-selva-800 border-l-4 border-guacamaya rounded-2xl p-5 space-y-3">
+          <p className="text-xs font-bold uppercase tracking-wider text-guacamaya">
             Práctica guiada
           </p>
-          <p className="text-sm font-semibold text-slate-800">
-            {pg.pregunta}
-          </p>
+          <p className="text-sm font-semibold text-hueso">{pg.pregunta}</p>
 
-          <div className="space-y-2">
+          <div className="space-y-2.5">
             {opciones.map((op, i) => {
               const isPicked = selected === op;
-              let style = "bg-white border-slate-300 text-slate-800";
+              let style =
+                "bg-selva-900 border-selva-700 text-hueso hover:border-musgo";
               if (isPicked && op.correcta) {
-                style = "bg-emerald-50 border-emerald-500 text-emerald-800";
+                style = "bg-quetzal/15 border-quetzal text-quetzal";
               } else if (isPicked && !op.correcta) {
-                style = "bg-red-50 border-red-400 text-red-700";
+                style = "bg-red-500/15 border-red-400 text-red-300";
               }
 
               return (
@@ -94,7 +95,7 @@ export default function MicroClassScreen({ detectedErrors, microClases, onFinish
                     setSelected(op);
                     if (!op.correcta) setShowHint(true);
                   }}
-                  className={`w-full text-left px-4 py-3 rounded-xl border-2 font-mono text-sm font-semibold transition ${style}`}
+                  className={`w-full text-left px-4 py-3 rounded-xl border-2 font-mono text-sm font-semibold transition cursor-pointer ${style}`}
                 >
                   {op.texto}
                 </button>
@@ -103,7 +104,7 @@ export default function MicroClassScreen({ detectedErrors, microClases, onFinish
           </div>
 
           {showHint && !isCorrect && (
-            <div className="flex items-start gap-2 bg-amber-50 border border-amber-200 text-amber-800 text-xs p-3 rounded-xl">
+            <div className="flex items-start gap-2 bg-jaguar/15 border border-jaguar/40 text-jaguar text-xs p-3.5 rounded-xl">
               <Lightbulb className="w-4 h-4 shrink-0 mt-0.5" />
               <p>
                 {pg.pista ||
@@ -113,7 +114,7 @@ export default function MicroClassScreen({ detectedErrors, microClases, onFinish
           )}
 
           {isCorrect && (
-            <div className="flex items-center gap-2 text-emerald-700 text-sm font-semibold">
+            <div className="flex items-center gap-2 text-quetzal text-sm font-semibold">
               <CheckCircle2 className="w-5 h-5" />
               ¡Correcto! Ya dominaste este paso.
             </div>
@@ -124,7 +125,7 @@ export default function MicroClassScreen({ detectedErrors, microClases, onFinish
       <button
         disabled={!isCorrect}
         onClick={handleNext}
-        className="w-full py-3.5 rounded-xl font-semibold flex items-center justify-center gap-2 transition bg-blue-600 text-white disabled:bg-slate-300 disabled:text-slate-500"
+        className="w-full py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 transition bg-zorro hover:brightness-110 text-selva-900 disabled:bg-selva-700 disabled:text-musgo cursor-pointer disabled:cursor-not-allowed"
       >
         {idx + 1 < detectedErrors.length
           ? "Siguiente refuerzo"

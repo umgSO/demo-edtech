@@ -17,13 +17,11 @@ export default function App() {
   const [diagResults, setDiagResults] = useState([]);
   const [reevalResults, setReevalResults] = useState([]);
 
-  // Carga el tema desde el backend de P1 (con respaldo offline automático)
   useEffect(() => {
     async function cargar() {
       try {
         const data = await obtenerTema();
         if (data) {
-          // Soporta si P1 devuelve { activo, tema: {...} } o el JSON directo con campo activo
           const temaReal = data.tema || data;
           if (temaReal.diagnostico) setTema(temaReal);
           if (typeof data.activo === "boolean") setTemaActivo(data.activo);
@@ -50,7 +48,6 @@ export default function App() {
     setDetectedErrors(failedErrors);
 
     if (failedErrors.length === 0) {
-      // Si sacó 100% en el diagnóstico, guarda directo
       guardarResultado({
         estudiante: student.name,
         antes: 100,
@@ -76,7 +73,6 @@ export default function App() {
       ),
     ];
 
-    // Envía el resultado con el formato exacto de Persona 1
     await guardarResultado({
       estudiante: student.name,
       antes: Math.round((diagCorrect / diagResults.length) * 100),
@@ -97,44 +93,55 @@ export default function App() {
   };
 
   const filtradas = (tema.reevaluacion || []).filter((q) =>
-    detectedErrors.includes(q.target_error || q.error_id || q.error_objetivo || q.error)
+    detectedErrors.includes(
+      q.target_error || q.error_id || q.error_objetivo || q.error
+    )
   );
   const reevalQuestions =
     filtradas.length > 0 ? filtradas : (tema.reevaluacion || []).slice(0, 3);
 
   return (
-    <div className="min-h-screen bg-slate-200 flex justify-center font-sans">
-      <div className="w-full max-w-md min-h-screen bg-slate-50 shadow-xl flex flex-col">
+    <div className="min-h-screen bg-selva-900 text-hueso flex justify-center font-texto">
+      <div className="w-full max-w-2xl min-h-screen bg-selva-900 flex flex-col shadow-xl">
         <header
-          className={`text-white px-5 py-4 flex items-center justify-between transition-colors ${
-            step === "TUTOR_CASA" ? "bg-indigo-700" : "bg-blue-600"
+          className={`sticky top-0 z-10 px-5 py-4 flex items-center justify-between gap-3 text-selva-900 transition-colors ${
+            step === "TUTOR_CASA" ? "bg-quetzal" : "bg-zorro"
           }`}
         >
-          <div onClick={resetAll} className="cursor-pointer">
-            <p className="text-xs uppercase tracking-wider opacity-80 font-semibold">
-              {tema.grado}
+          <div onClick={resetAll} className="cursor-pointer min-w-0">
+            <p className="text-xs font-semibold opacity-80">
+              {tema.grado} · Grupo Zorro
             </p>
-            <h1 className="text-base font-bold leading-tight">{tema.titulo}</h1>
+            <h1 className="font-titulo text-lg sm:text-xl font-bold leading-tight truncate">
+              {tema.titulo}
+            </h1>
           </div>
-          <span className="bg-white/20 text-xs font-mono px-2.5 py-1 rounded-full">
-            {student ? student.name : tema.codigo_clase}
-          </span>
+          <div className="flex items-center gap-2.5 shrink-0">
+            <span className="bg-selva-900/15 text-selva-900 text-xs font-mono font-semibold px-3 py-1 rounded-full">
+              {student ? student.name : tema.codigo_clase}
+            </span>
+            <span className="text-2xl leading-none" aria-hidden="true">
+              🦊
+            </span>
+          </div>
         </header>
 
         {!temaActivo && step === "INGRESO" ? (
           <div className="flex-1 p-6 flex flex-col justify-center items-center text-center gap-3">
-            <p className="text-lg font-bold text-slate-800">
-              Clase aún no habilitada
-            </p>
-            <p className="text-sm text-slate-600">
-              Espera a que tu docente active el tema de hoy en su panel.
-            </p>
-            <button
-              onClick={() => window.location.reload()}
-              className="mt-2 bg-blue-600 text-white px-5 py-2.5 rounded-xl font-semibold text-sm"
-            >
-              Verificar de nuevo
-            </button>
+            <div className="bg-selva-800 border border-selva-700 rounded-2xl p-6 max-w-md w-full space-y-3">
+              <p className="font-titulo text-xl font-bold text-hueso">
+                Clase aún no habilitada
+              </p>
+              <p className="text-sm text-musgo">
+                Espera a que tu docente active el tema de hoy en su panel.
+              </p>
+              <button
+                onClick={() => window.location.reload()}
+                className="mt-2 w-full bg-zorro hover:brightness-110 text-selva-900 px-5 py-3 rounded-xl font-bold text-sm transition cursor-pointer"
+              >
+                Verificar de nuevo
+              </button>
+            </div>
           </div>
         ) : (
           <>

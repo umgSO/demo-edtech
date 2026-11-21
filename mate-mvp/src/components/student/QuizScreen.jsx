@@ -27,10 +27,9 @@ export default function QuizScreen({ questions, mode, onFinish }) {
   };
 
   return (
-    <div className="flex-1 flex flex-col p-6 justify-between">
+    <div className="flex-1 flex flex-col p-5 justify-between">
       <div>
-        {/* Barra de progreso */}
-        <div className="flex items-center justify-between text-xs font-semibold text-slate-500 mb-2">
+        <div className="flex items-center justify-between text-xs font-semibold text-musgo mb-2">
           <span className="uppercase tracking-wider">
             {mode === "diagnostico" ? "Diagnóstico" : "Verificación final"}
           </span>
@@ -38,32 +37,31 @@ export default function QuizScreen({ questions, mode, onFinish }) {
             Pregunta {index + 1} de {questions.length}
           </span>
         </div>
-        <div className="w-full h-2.5 bg-slate-200 rounded-full overflow-hidden mb-8">
+
+        <div className="w-full h-2.5 bg-selva-700 rounded-full overflow-hidden mb-8">
           <div
             className={`h-full transition-all duration-300 ${
-              mode === "diagnostico" ? "bg-blue-600" : "bg-emerald-500"
+              mode === "diagnostico" ? "bg-zorro" : "bg-quetzal"
             }`}
             style={{ width: `${progress}%` }}
           />
         </div>
 
-        {/* Ecuación */}
-        <div className="bg-white border border-slate-200 rounded-2xl p-8 text-center shadow-sm mb-6">
-          <p className="text-xs text-slate-400 uppercase font-semibold mb-2">
+        <div className="bg-selva-800 border border-selva-700 rounded-2xl p-8 text-center mb-6">
+          <p className="text-xs text-musgo uppercase font-semibold tracking-wider mb-2">
             Encuentra el valor de x
           </p>
-          <p className="text-3xl font-mono font-bold text-slate-800 tracking-wide">
+          <p className="text-3xl sm:text-4xl font-mono font-bold text-hueso tracking-wide">
             {current.enunciado}
           </p>
         </div>
 
-        {/* Opciones táctiles grandes */}
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-3.5">
           {current.opciones.map((op, i) => (
             <button
               key={i}
               onClick={() => handleSelect(op)}
-              className="bg-white hover:bg-blue-50 active:bg-blue-100 border-2 border-slate-200 hover:border-blue-400 rounded-2xl py-5 px-4 text-xl font-mono font-bold text-slate-800 transition shadow-sm"
+              className="bg-selva-800 hover:bg-selva-700 active:scale-[0.98] border-2 border-selva-700 hover:border-zorro rounded-2xl py-5 px-4 text-xl font-mono font-bold text-hueso transition cursor-pointer"
             >
               {op.texto}
             </button>
@@ -71,7 +69,7 @@ export default function QuizScreen({ questions, mode, onFinish }) {
         </div>
       </div>
 
-      <p className="text-center text-xs text-slate-400 mt-6">
+      <p className="text-center text-xs text-musgo mt-6">
         {mode === "diagnostico"
           ? "No pasa nada si fallas: esto nos dice exactamente qué reforzar."
           : "Demuestra lo que acabas de reforzar."}

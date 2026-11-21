@@ -385,12 +385,12 @@ export default function PanelEstudiante({ onSalir }) {
 
   if (enPractica) {
     return (
-      <div style={{ position: 'fixed', inset: 0, zIndex: 9999, background: '#e2e8f0', display: 'flex', flexDirection: 'column' }}>
-        <div style={{ background: '#0f241c', padding: '10px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span style={{ color: '#a7f3d0', fontWeight: 700, fontSize: 14 }}>Práctica activa · Grupo {ESTUDIANTE.grupo}</span>
+      <div style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'var(--selva-900)', display: 'flex', flexDirection: 'column' }}>
+        <div style={{ background: 'var(--selva-800)', padding: '10px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <span style={{ color: 'var(--hueso)', fontWeight: 700, fontSize: 14 }}>Práctica activa · Grupo {ESTUDIANTE.grupo}</span>
           <button
             onClick={() => setEnPractica(false)}
-            style={{ background: '#1f4d3b', color: '#fff', border: 'none', padding: '7px 14px', borderRadius: 8, cursor: 'pointer', fontWeight: 600 }}
+            style={{ background: 'var(--selva-700)', color: 'var(--hueso)', border: 'none', padding: '7px 14px', borderRadius: 8, cursor: 'pointer', fontWeight: 600 }}
           >
             ← Volver a Matemáticas
           </button>

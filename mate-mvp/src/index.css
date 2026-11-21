@@ -1,1 +1,28 @@
-@import "tailwindcss";  
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Figtree:wght@400;500;600&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-selva-900: #11160f;
+  --color-selva-800: #1a2117;
+  --color-selva-700: #283326;
+  --color-hueso: #efe9da;
+  --color-musgo: #9ba58f;
+  --color-jaguar: #d9a441;
+  --color-zorro: #e8873a;
+  --color-quetzal: #4fb783;
+  --color-guacamaya: #4c8fd6;
+
+  --font-titulo: 'Bricolage Grotesque', 'Trebuchet MS', sans-serif;
+  --font-texto: 'Figtree', system-ui, sans-serif;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  background-color: #11160f;
+  color: #efe9da;
+  font-family: 'Figtree', system-ui, sans-serif;
+}
