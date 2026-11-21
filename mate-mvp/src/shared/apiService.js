@@ -1,4 +1,7 @@
-const API_URL = `http://${window.location.hostname}:3001`;
+const IS_TUNNEL = window.location.hostname.includes("devtunnels.ms");
+const API_URL = IS_TUNNEL
+  ? "https://nxdqpgfn-3001.use2.devtunnels.ms"
+  : `http://${window.location.hostname}:3001`;
 
 export async function obtenerTema() {
   try {
