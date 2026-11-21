@@ -336,3 +336,15 @@
 }
 .escritorio .lista { max-width: 640px; }
 .escritorio .resumen { max-width: 640px; }
+
+.lat-salir {
+  width: 100%;
+  margin-top: 28px;
+  padding: 12px;
+  border: 1px solid var(--selva-700);
+  border-radius: 10px;
+  background: none;
+  color: var(--musgo);
+  cursor: pointer;
+}
+.lat-salir:hover { color: var(--hueso); background: var(--selva-700); }

@@ -39,3 +39,39 @@ button, input { font: inherit; color: inherit; }
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; }
 }
+
+/* ---------- Pantalla de entrada ---------- */
+.bv {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 24px;
+  text-align: center;
+}
+.bv-huella { font-size: 2.6rem; }
+.bv h1 {
+  margin: 8px 0 28px;
+  font-family: var(--fuente-titulo);
+  font-size: clamp(1.8rem, 6vw, 2.4rem);
+}
+.bv-opciones { display: grid; gap: 14px; width: min(100%, 440px); }
+.bv-opcion {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 20px;
+  border: 0;
+  border-left: 6px solid var(--color);
+  border-radius: 14px;
+  background: var(--selva-800);
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.bv-opcion:hover { background: var(--selva-700); }
+.bv-emoji { font-size: 2.4rem; }
+.bv-texto { display: flex; flex-direction: column; }
+.bv-texto strong { font-family: var(--fuente-titulo); font-size: 1.3rem; }
+.bv-texto span { color: var(--musgo); }
