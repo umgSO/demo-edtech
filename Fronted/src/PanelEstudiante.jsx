@@ -2,13 +2,15 @@ import { useState, useEffect } from 'react'
 import { ESTUDIANTE, MATERIAS, TAREAS_INICIALES, EVENTOS, AVISOS_INICIALES, HOY } from './dataEstudiante'
 import './PanelEstudiante.css'
 
-const PRACTICA_URL = import.meta.env.VITE_PRACTICA_URL || (
-  window.location.hostname.includes('devtunnels.ms')
+const ENV_PRACTICA_URL = import.meta.env.VITE_PRACTICA_URL?.trim()
+
+const PRACTICA_URL =
+  ENV_PRACTICA_URL ||
+  (window.location.hostname.includes('devtunnels.ms')
     ? 'https://nxdqpgfn-5173.use2.devtunnels.ms'
-    : (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+    : window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
       ? `http://${window.location.hostname}:5173`
-      : null
-)
+      : null)
 
 /* ---------- Iconos ---------- */
 const ICONOS = {
@@ -387,23 +389,49 @@ export default function PanelEstudiante({ onSalir }) {
     return () => window.removeEventListener('keydown', alTeclear)
   }, [menu])
 
-  if (enPractica && PRACTICA_URL) {
+  if (enPractica) {
     return (
       <div style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'var(--selva-900)', display: 'flex', flexDirection: 'column' }}>
-        <div style={{ background: 'var(--selva-800)', padding: '10px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span style={{ color: 'var(--hueso)', fontWeight: 700, fontSize: 14 }}>Práctica activa · Grupo {ESTUDIANTE.grupo}</span>
-          <button
-            onClick={() => setEnPractica(false)}
-            style={{ background: 'var(--selva-700)', color: 'var(--hueso)', border: 'none', padding: '7px 14px', borderRadius: 8, cursor: 'pointer', fontWeight: 600 }}
-          >
-            ← Volver a Matemáticas
-          </button>
+        <div style={{ background: 'var(--selva-800)', borderBottom: '1px solid var(--selva-700)', padding: '10px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10 }}>
+          <span style={{ color: 'var(--hueso)', fontWeight: 700, fontSize: 14 }}>
+            Práctica activa · Grupo {ESTUDIANTE.grupo}
+          </span>
+          <div style={{ display: 'flex', gap: 8 }}>
+            {PRACTICA_URL && (
+              <a
+                href={PRACTICA_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ background: 'var(--zorro)', color: 'var(--selva-900)', textDecoration: 'none', padding: '7px 12px', borderRadius: 8, fontWeight: 700, fontSize: 13 }}
+              >
+                Abrir aparte ↗
+              </a>
+            )}
+            <button
+              onClick={() => setEnPractica(false)}
+              style={{ background: 'var(--selva-700)', color: 'var(--hueso)', border: 'none', padding: '7px 14px', borderRadius: 8, cursor: 'pointer', fontWeight: 600 }}
+            >
+              ← Volver a Matemáticas
+            </button>
+          </div>
         </div>
-        <iframe
-          src={PRACTICA_URL}
-          title="Práctica de Ecuaciones"
-          style={{ flex: 1, width: '100%', border: 'none' }}
-        />
+
+        {PRACTICA_URL ? (
+          <iframe
+            src={PRACTICA_URL}
+            title="Práctica de Ecuaciones"
+            style={{ flex: 1, width: '100%', border: 'none' }}
+          />
+        ) : (
+          <div style={{ flex: 1, display: 'grid', placeItems: 'center', padding: 24, textAlign: 'center', color: 'var(--hueso)' }}>
+            <div style={{ maxWidth: 420, background: 'var(--selva-800)', border: '1px solid var(--selva-700)', borderRadius: 16, padding: 24 }}>
+              <strong style={{ display: 'block', marginBottom: 8 }}>Práctica no conectada en producción</strong>
+              <p style={{ margin: 0, color: 'var(--musgo)', fontSize: 14 }}>
+                Configura <code>VITE_PRACTICA_URL</code> con la URL HTTPS de <code>mate-mvp</code> en AWS Amplify y vuelve a desplegar.
+              </p>
+            </div>
+          </div>
+        )}
       </div>
     )
   }
@@ -454,7 +482,7 @@ export default function PanelEstudiante({ onSalir }) {
               seccion={seccion}
               onSeccion={setSeccion}
               onPracticar={() => {
-                if (window.location.hostname.includes('devtunnels.ms')) {
+                if (PRACTICA_URL && window.location.hostname.includes('devtunnels.ms')) {
                   window.open(PRACTICA_URL, '_blank', 'noopener,noreferrer')
                 } else {
                   setEnPractica(true)
