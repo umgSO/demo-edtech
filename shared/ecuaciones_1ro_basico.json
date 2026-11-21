@@ -1,0 +1,186 @@
+{
+  "tema_id": "mat_1b_ecuaciones",
+  "grado": "1.º Básico (CNB)",
+  "titulo": "Ecuaciones lineales (ax + b = c)",
+  "codigo_clase": "MATE-1B",
+  "diagnostico": [
+    {
+      "id": "d1",
+      "enunciado": "Resuelve: 2x - 4 = 10",
+      "opciones": [
+        { "texto": "x = 7", "correcta": true, "error_id": null },
+        { "texto": "x = 3", "correcta": false, "error_id": "err_signo" },
+        { "texto": "x = 12", "correcta": false, "error_id": "err_coeficiente" },
+        { "texto": "x = -5", "correcta": false, "error_id": "err_termino" }
+      ]
+    },
+    {
+      "id": "d2",
+      "enunciado": "Resuelve: 3x + 6 = 18",
+      "opciones": [
+        { "texto": "x = 4", "correcta": true, "error_id": null },
+        { "texto": "x = 8", "correcta": false, "error_id": "err_signo" },
+        { "texto": "x = 9", "correcta": false, "error_id": "err_coeficiente" },
+        { "texto": "x = 2", "correcta": false, "error_id": "err_termino" }
+      ]
+    },
+    {
+      "id": "d3",
+      "enunciado": "Resuelve: 4x - 8 = 12",
+      "opciones": [
+        { "texto": "x = 5", "correcta": true, "error_id": null },
+        { "texto": "x = 1", "correcta": false, "error_id": "err_signo" },
+        { "texto": "x = 16", "correcta": false, "error_id": "err_coeficiente" },
+        { "texto": "x = -3", "correcta": false, "error_id": "err_termino" }
+      ]
+    },
+    {
+      "id": "d4",
+      "enunciado": "Resuelve: 2x + 6 = 16",
+      "opciones": [
+        { "texto": "x = 5", "correcta": true, "error_id": null },
+        { "texto": "x = 11", "correcta": false, "error_id": "err_signo" },
+        { "texto": "x = 8", "correcta": false, "error_id": "err_coeficiente" },
+        { "texto": "x = 2", "correcta": false, "error_id": "err_termino" }
+      ]
+    },
+    {
+      "id": "d5",
+      "enunciado": "Resuelve: 5x - 10 = 15",
+      "opciones": [
+        { "texto": "x = 5", "correcta": true, "error_id": null },
+        { "texto": "x = 1", "correcta": false, "error_id": "err_signo" },
+        { "texto": "x = 20", "correcta": false, "error_id": "err_coeficiente" },
+        { "texto": "x = -3", "correcta": false, "error_id": "err_termino" }
+      ]
+    },
+    {
+      "id": "d6",
+      "enunciado": "Resuelve: 3x + 3 = 12",
+      "opciones": [
+        { "texto": "x = 3", "correcta": true, "error_id": null },
+        { "texto": "x = 5", "correcta": false, "error_id": "err_signo" },
+        { "texto": "x = 6", "correcta": false, "error_id": "err_coeficiente" },
+        { "texto": "x = 2", "correcta": false, "error_id": "err_termino" }
+      ]
+    }
+  ],
+  "micro_clases": {
+    "err_signo": {
+      "nombre_corto": "Cambio de signo",
+      "titulo": "El puente cambia el signo",
+      "explicacion": "Una ecuación es una balanza. Si un número cruza el signo igual (=), debe cambiar a su operación contraria para mantener el equilibrio: si resta pasa a sumar, si suma pasa a restar.",
+      "ejemplo_visual": "2x - 4 = 10  →  2x = 10 + 4  →  2x = 14",
+      "practica_guiada": {
+        "pregunta": "Si 3x - 5 = 10, ¿cómo queda el primer paso?",
+        "correcta": "3x = 10 + 5",
+        "distractor": "3x = 10 - 5"
+      },
+      "guia_tutor_casa": {
+        "pregunta_para_tutor": "Pídele que te explique con sus palabras por qué el -4 se vuelve +4 al cruzar el signo igual en '2x - 4 = 10'.",
+        "si_entendio": "Menciona que cambia de operación (resta a suma) o usa la idea de mantener equilibrada la balanza.",
+        "si_no_entendio": "Si dice 'porque así es la regla' sin explicar el cambio, léele esta pista: imagina una balanza; si quitas 4 de un lado, debes compensarlo sumando 4 del otro."
+      }
+    },
+    "err_coeficiente": {
+      "nombre_corto": "Despeje del coeficiente",
+      "titulo": "Lo que multiplica pasa a dividir",
+      "explicacion": "El número pegado a la 'x' (como el 3 en 3x) está multiplicando. Para dejar sola a la 'x', ese número nunca se resta ni se suma: siempre pasa al otro lado dividiendo.",
+      "ejemplo_visual": "3x = 12  →  x = 12 / 3  →  x = 4",
+      "practica_guiada": {
+        "pregunta": "Si ya llegaste a 4x = 20, ¿cómo despejas la x?",
+        "correcta": "x = 20 / 4",
+        "distractor": "x = 20 - 4"
+      },
+      "guia_tutor_casa": {
+        "pregunta_para_tutor": "Pregúntale qué operación está haciendo el 3 con la 'x' en '3x = 12' y cómo se quita para dejar sola a la 'x'.",
+        "si_entendio": "Responde que el 3 está multiplicando y por eso pasa al otro lado a dividir.",
+        "si_no_entendio": "Si dice que pasa a restar, léele esta pista: '3x' significa 3 veces 'x'; lo contrario de multiplicar por 3 es repartir (dividir) entre 3."
+      }
+    },
+    "err_termino": {
+      "nombre_corto": "Términos semejantes",
+      "titulo": "No mezcles 'x' con números solos",
+      "explicacion": "Un término con 'x' y un número suelto son cosas distintas. Nunca los sumes ni los restes entre sí; primero mueve el número suelto al otro lado del igual.",
+      "ejemplo_visual": "2x + 3 = 11  →  NO es 5x = 11  →  SÍ es 2x = 11 - 3",
+      "practica_guiada": {
+        "pregunta": "En 4x + 2 = 14, ¿cuál es el paso correcto?",
+        "correcta": "4x = 14 - 2",
+        "distractor": "6x = 14"
+      },
+      "guia_tutor_casa": {
+        "pregunta_para_tutor": "Pregúntale si en '2x + 3 = 11' se puede sumar el 2 y el 3 para escribir '5x = 11'.",
+        "si_entendio": "Dice que no, porque el 2 acompaña a una 'x' desconocida y el 3 es un número suelto.",
+        "si_no_entendio": "Si dice que sí, léele esta pista: es como tener 2 cajas cerradas y 3 quetzales sueltos; no puedes decir que tienes 5 cajas."
+      }
+    }
+  },
+  "reevaluacion": [
+    {
+      "id": "r1",
+      "enfoque_error": "err_signo",
+      "enunciado": "Resuelve: 2x - 6 = 8",
+      "opciones": [
+        { "texto": "x = 7", "correcta": true, "error_id": null },
+        { "texto": "x = 1", "correcta": false, "error_id": "err_signo" },
+        { "texto": "x = 12", "correcta": false, "error_id": "err_coeficiente" },
+        { "texto": "x = -2", "correcta": false, "error_id": "err_termino" }
+      ]
+    },
+    {
+      "id": "r2",
+      "enfoque_error": "err_signo",
+      "enunciado": "Resuelve: 3x + 6 = 27",
+      "opciones": [
+        { "texto": "x = 7", "correcta": true, "error_id": null },
+        { "texto": "x = 11", "correcta": false, "error_id": "err_signo" },
+        { "texto": "x = 18", "correcta": false, "error_id": "err_coeficiente" },
+        { "texto": "x = 3", "correcta": false, "error_id": "err_termino" }
+      ]
+    },
+    {
+      "id": "r3",
+      "enfoque_error": "err_coeficiente",
+      "enunciado": "Resuelve: 4x - 2 = 10",
+      "opciones": [
+        { "texto": "x = 3", "correcta": true, "error_id": null },
+        { "texto": "x = 2", "correcta": false, "error_id": "err_signo" },
+        { "texto": "x = 8", "correcta": false, "error_id": "err_coeficiente" },
+        { "texto": "x = 5", "correcta": false, "error_id": "err_termino" }
+      ]
+    },
+    {
+      "id": "r4",
+      "enfoque_error": "err_coeficiente",
+      "enunciado": "Resuelve: 5x + 5 = 30",
+      "opciones": [
+        { "texto": "x = 5", "correcta": true, "error_id": null },
+        { "texto": "x = 7", "correcta": false, "error_id": "err_signo" },
+        { "texto": "x = 20", "correcta": false, "error_id": "err_coeficiente" },
+        { "texto": "x = 3", "correcta": false, "error_id": "err_termino" }
+      ]
+    },
+    {
+      "id": "r5",
+      "enfoque_error": "err_termino",
+      "enunciado": "Resuelve: 2x + 4 = 18",
+      "opciones": [
+        { "texto": "x = 7", "correcta": true, "error_id": null },
+        { "texto": "x = 11", "correcta": false, "error_id": "err_signo" },
+        { "texto": "x = 12", "correcta": false, "error_id": "err_coeficiente" },
+        { "texto": "x = 3", "correcta": false, "error_id": "err_termino" }
+      ]
+    },
+    {
+      "id": "r6",
+      "enfoque_error": "err_termino",
+      "enunciado": "Resuelve: 4x - 8 = 16",
+      "opciones": [
+        { "texto": "x = 6", "correcta": true, "error_id": null },
+        { "texto": "x = 2", "correcta": false, "error_id": "err_signo" },
+        { "texto": "x = 20", "correcta": false, "error_id": "err_coeficiente" },
+        { "texto": "x = -4", "correcta": false, "error_id": "err_termino" }
+      ]
+    }
+  ]
+}
