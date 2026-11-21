@@ -78,30 +78,38 @@ const SECCIONES_CURSO = [
   { id: 'notas', nombre: 'Calificaciones', icono: 'notas' },
 ]
 
-function BotonPractica({ onPracticar }) {
+function TarjetaPractica({ onPracticar }) {
   return (
-    <button
-      onClick={onPracticar}
-      style={{
-        width: '100%',
-        padding: '15px 18px',
-        borderRadius: 14,
-        border: 'none',
-        background: 'linear-gradient(135deg, #2563eb, #1d4ed8)',
-        color: '#ffffff',
-        fontWeight: 700,
-        fontSize: 15,
-        cursor: 'pointer',
-        marginBottom: 16,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        boxShadow: '0 6px 18px rgba(37, 99, 235, 0.35)',
-      }}
-    >
-      <span>?? Practicar: Ecuaciones lineales</span>
-      <span>?</span>
-    </button>
+    <li>
+      <button
+        type="button"
+        className="est-tema"
+        onClick={onPracticar}
+        style={{
+          width: '100%',
+          padding: 0,
+          textAlign: 'left',
+          cursor: 'pointer',
+          font: 'inherit',
+          color: 'inherit',
+          border: '1px solid var(--acento)',
+        }}
+      >
+        <div
+          className="est-tema-solo"
+          style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}
+        >
+          <span className="est-tema-cabeza" style={{ flex: 1 }}>
+            <span className="est-titulo-fila">Ecuaciones lineales (ax + b = c)</span>
+            <span className="est-detalle" style={{ color: 'var(--acento)' }}>
+              Pr√°ctica interactiva ¬∑ Toca para iniciar
+            </span>
+            <Barra valor={100} />
+          </span>
+          <Ico nombre="siguiente" size={20} />
+        </div>
+      </button>
+    </li>
   )
 }
 
@@ -146,13 +154,13 @@ function TareaItem({ t, conMateria, onMarcar }) {
 
 /* ---------- Tablero ---------- */
 function Tablero({ tareas, onMateria }) {
-  const pendientes = (id) => tareas.key ? 0 : tareas.filter((t) => t.materiaId === id && t.estado === 'pendiente').length
+  const pendientes = (id) => tareas.filter((t) => t.materiaId === id && t.estado === 'pendiente').length
   return (
     <>
       <h2 className="est-h2">Materias</h2>
       <div className="est-cursos">
         {MATERIAS.map((m) => {
-          const p = tareas.filter((t) => t.materiaId === m.id && t.estado === 'pendiente').length
+          const p = pendientes(m.id)
           return (
             <button key={m.id} className="est-curso" style={{ '--color': m.color }} onClick={() => onMateria(m.id)}>
               <span className="est-curso-banda">
@@ -202,7 +210,7 @@ function Calendario({ tareas }) {
     return acc
   }, {})
 
-  if (items.length === 0) return <p className="est-vacio">No tienes fechas prÛximas.</p>
+  if (items.length === 0) return <p className="est-vacio">No tienes fechas pr√≥ximas.</p>
 
   return (
     <div className="est-dias">
@@ -232,7 +240,7 @@ function PorHacer({ tareas, onMarcar }) {
   const entregadas = tareas.filter((t) => t.estado === 'entregada').sort(porFecha)
   return (
     <>
-      {pendientes.length === 0 && <p className="est-vacio">No tienes tareas pendientes. Todo est· entregado.</p>}
+      {pendientes.length === 0 && <p className="est-vacio">No tienes tareas pendientes. Todo est√° entregado.</p>}
       <ul className="est-lista-tareas">
         {pendientes.map((t) => <TareaItem key={t.id} t={t} conMateria onMarcar={onMarcar} />)}
       </ul>
@@ -287,8 +295,6 @@ function Curso({ m, tareas, seccion, onSeccion, onPracticar }) {
           <div><strong>{pend}</strong><span>por hacer</span></div>
         </div>
 
-        {esMate && <BotonPractica onPracticar={onPracticar} />}
-
         <nav className="est-lista" aria-label={`Secciones de ${m.nombre}`}>
           {SECCIONES_CURSO.map((s) => (
             <button key={s.id} className="est-fila" onClick={() => onSeccion(s.id)}>
@@ -308,39 +314,37 @@ function Curso({ m, tareas, seccion, onSeccion, onPracticar }) {
 
   if (seccion === 'temas') {
     return (
-      <>
-        {esMate && <BotonPractica onPracticar={onPracticar} />}
-        <ul className="est-lista-tareas">
-          {m.temas.map((tema) => {
-            const cabeza = (
-              <span className="est-tema-cabeza">
-                <span className="est-titulo-fila">{tema.titulo}</span>
-                <span className="est-detalle">{tema.avance}% visto</span>
-                <Barra valor={tema.avance} />
-              </span>
-            )
-            return (
-              <li key={tema.id}>
-                {tema.subtemas ? (
-                  <details className="est-tema">
-                    <summary>{cabeza}<Ico nombre="abajo" size={20} /></summary>
-                    <ul className="est-subtemas">
-                      {tema.subtemas.map((s) => (
-                        <li key={s.t} className={s.hecho ? 'hecho' : ''}>
-                          <span className="est-marca">{s.hecho && <Ico nombre="check" size={14} />}</span>
-                          {s.t}
-                        </li>
-                      ))}
-                    </ul>
-                  </details>
-                ) : (
-                  <div className="est-tema"><div className="est-tema-solo">{cabeza}</div></div>
-                )}
-              </li>
-            )
-          })}
-        </ul>
-      </>
+      <ul className="est-lista-tareas">
+        {esMate && <TarjetaPractica onPracticar={onPracticar} />}
+        {m.temas.map((tema) => {
+          const cabeza = (
+            <span className="est-tema-cabeza">
+              <span className="est-titulo-fila">{tema.titulo}</span>
+              <span className="est-detalle">{tema.avance}% visto</span>
+              <Barra valor={tema.avance} />
+            </span>
+          )
+          return (
+            <li key={tema.id}>
+              {tema.subtemas ? (
+                <details className="est-tema">
+                  <summary>{cabeza}<Ico nombre="abajo" size={20} /></summary>
+                  <ul className="est-subtemas">
+                    {tema.subtemas.map((s) => (
+                      <li key={s.t} className={s.hecho ? 'hecho' : ''}>
+                        <span className="est-marca">{s.hecho && <Ico nombre="check" size={14} />}</span>
+                        {s.t}
+                      </li>
+                    ))}
+                  </ul>
+                </details>
+              ) : (
+                <div className="est-tema"><div className="est-tema-solo">{cabeza}</div></div>
+              )}
+            </li>
+          )
+        })}
+      </ul>
     )
   }
 
@@ -349,7 +353,7 @@ function Curso({ m, tareas, seccion, onSeccion, onPracticar }) {
       <div className="est-resumen">
         <div><strong>{prom ?? '-'}</strong><span>promedio de {m.nombre}</span></div>
       </div>
-      {notas.length === 0 && <p className="est-vacio">TodavÌa no tienes tareas calificadas en esta materia.</p>}
+      {notas.length === 0 && <p className="est-vacio">Todav√≠a no tienes tareas calificadas en esta materia.</p>}
       <ul className="est-lista-tareas est-espacio">
         {notas.map((t) => (
           <li key={t.id} className="est-nota">
@@ -383,17 +387,17 @@ export default function PanelEstudiante({ onSalir }) {
     return (
       <div style={{ position: 'fixed', inset: 0, zIndex: 9999, background: '#e2e8f0', display: 'flex', flexDirection: 'column' }}>
         <div style={{ background: '#0f241c', padding: '10px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span style={{ color: '#a7f3d0', fontWeight: 700, fontSize: 14 }}>Pr·ctica activa ∑ Grupo {ESTUDIANTE.grupo}</span>
+          <span style={{ color: '#a7f3d0', fontWeight: 700, fontSize: 14 }}>Pr√°ctica activa ¬∑ Grupo {ESTUDIANTE.grupo}</span>
           <button
             onClick={() => setEnPractica(false)}
             style={{ background: '#1f4d3b', color: '#fff', border: 'none', padding: '7px 14px', borderRadius: 8, cursor: 'pointer', fontWeight: 600 }}
           >
-            ? Volver a Matem·ticas
+            ‚Üê Volver a Matem√°ticas
           </button>
         </div>
         <iframe
           src={PRACTICA_URL}
-          title="Pr·ctica de Ecuaciones"
+          title="Pr√°ctica de Ecuaciones"
           style={{ flex: 1, width: '100%', border: 'none' }}
         />
       </div>
@@ -429,7 +433,7 @@ export default function PanelEstudiante({ onSalir }) {
           {materia ? (
             <button className="est-btn" onClick={atras} aria-label="Volver"><Ico nombre="atras" /></button>
           ) : (
-            <button className="est-btn" onClick={() => setMenu(true)} aria-label="Abrir men˙"><Ico nombre="menu" /></button>
+            <button className="est-btn" onClick={() => setMenu(true)} aria-label="Abrir men√∫"><Ico nombre="menu" /></button>
           )}
           <div className="est-titulos">
             <h1>{titulo}</h1>
@@ -481,8 +485,8 @@ export default function PanelEstudiante({ onSalir }) {
       {menu && (
         <>
           <div className="est-fondo" onClick={() => setMenu(false)} />
-          <aside className="est-drawer" role="dialog" aria-modal="true" aria-label="Men˙ del estudiante">
-            <button className="est-btn est-cerrar" onClick={() => setMenu(false)} aria-label="Cerrar men˙">
+          <aside className="est-drawer" role="dialog" aria-modal="true" aria-label="Men√∫ del estudiante">
+            <button className="est-btn est-cerrar" onClick={() => setMenu(false)} aria-label="Cerrar men√∫">
               <Ico nombre="cerrar" />
             </button>
             <span className="est-avatar grande">{iniciales(ESTUDIANTE.nombre)}</span>
