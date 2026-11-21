@@ -67,13 +67,13 @@ export default function TutorModeScreen({ detectedErrors, microClases, onDone })
             <p className="text-xs font-bold text-emerald-800 mb-1">
               Qué buscar en su respuesta:
             </p>
-            <p className="text-sm text-emerald-900">{guia.que_buscar}</p>
+            <p className="text-sm text-emerald-900">{guia.que_buscar || guia.si_entendio}</p>
           </div>
 
           {showHint && (
             <div className="bg-amber-50 border border-amber-200 rounded-xl p-3.5 flex items-start gap-2">
               <Lightbulb className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
-              <p className="text-sm text-amber-900">{guia.pista_si_se_traba}</p>
+              <p className="text-sm text-amber-900">{guia.pista_si_se_traba || guia.si_no_entendio}</p>
             </div>
           )}
         </div>

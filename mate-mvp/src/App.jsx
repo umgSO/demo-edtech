@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { obtenerTema, guardarResultado } from "./shared/apiService";
 import { MOCK_TEMA } from "./data/mockTema";
 import JoinScreen from "./components/student/JoinScreen";
 import QuizScreen from "./components/student/QuizScreen";
@@ -6,14 +7,33 @@ import MicroClassScreen from "./components/student/MicroClassScreen";
 import MinigamePlaceholder from "./components/student/MinigamePlaceholder";
 import ResultsScreen from "./components/student/ResultsScreen";
 import TutorModeScreen from "./components/student/TutorModeScreen";
-import { enviarResultado } from "./services/api";
 
 export default function App() {
+  const [tema, setTema] = useState(MOCK_TEMA);
+  const [temaActivo, setTemaActivo] = useState(true);
   const [step, setStep] = useState("INGRESO");
   const [student, setStudent] = useState(null);
   const [detectedErrors, setDetectedErrors] = useState([]);
   const [diagResults, setDiagResults] = useState([]);
   const [reevalResults, setReevalResults] = useState([]);
+
+  // Carga el tema desde el backend de P1 (con respaldo offline automático)
+  useEffect(() => {
+    async function cargar() {
+      try {
+        const data = await obtenerTema();
+        if (data) {
+          // Soporta si P1 devuelve { activo, tema: {...} } o el JSON directo con campo activo
+          const temaReal = data.tema || data;
+          if (temaReal.diagnostico) setTema(temaReal);
+          if (typeof data.activo === "boolean") setTemaActivo(data.activo);
+        }
+      } catch (err) {
+        console.warn("Usando tema local:", err);
+      }
+    }
+    cargar();
+  }, []);
 
   const handleStart = (studentData) => {
     setStudent(studentData);
@@ -28,22 +48,41 @@ export default function App() {
     ];
     setDiagResults(answers);
     setDetectedErrors(failedErrors);
-    setStep(failedErrors.length === 0 ? "RESULTADOS" : "MICROCLASE");
+
+    if (failedErrors.length === 0) {
+      // Si sacó 100% en el diagnóstico, guarda directo
+      guardarResultado({
+        estudiante: student.name,
+        antes: 100,
+        despues: 100,
+        errores_antes: [],
+        errores_despues: [],
+      });
+      setStep("RESULTADOS");
+    } else {
+      setStep("MICROCLASE");
+    }
   };
 
-  const handleReevalFinish = (answers) => {
+  const handleReevalFinish = async (answers) => {
     setReevalResults(answers);
 
     const diagCorrect = diagResults.filter((a) => a.isCorrect).length;
     const reevalCorrect = answers.filter((a) => a.isCorrect).length;
 
-    enviarResultado({
-      student_name: student.name,
-      class_code: student.classCode,
-      diag_errors: detectedErrors,
-      score_before: Math.round((diagCorrect / diagResults.length) * 100),
-      score_after: Math.round((reevalCorrect / answers.length) * 100),
-      tutor_validated: false,
+    const erroresDespues = [
+      ...new Set(
+        answers.filter((a) => !a.isCorrect && a.errorId).map((a) => a.errorId)
+      ),
+    ];
+
+    // Envía el resultado con el formato exacto de Persona 1
+    await guardarResultado({
+      estudiante: student.name,
+      antes: Math.round((diagCorrect / diagResults.length) * 100),
+      despues: Math.round((reevalCorrect / answers.length) * 100),
+      errores_antes: detectedErrors,
+      errores_despues: erroresDespues,
     });
 
     setStep("RESULTADOS");
@@ -57,9 +96,11 @@ export default function App() {
     setReevalResults([]);
   };
 
-  const reevalQuestions = MOCK_TEMA.reevaluacion.filter((q) =>
-    detectedErrors.includes(q.target_error)
+  const filtradas = (tema.reevaluacion || []).filter((q) =>
+    detectedErrors.includes(q.target_error || q.error_id || q.error_objetivo || q.error)
   );
+  const reevalQuestions =
+    filtradas.length > 0 ? filtradas : (tema.reevaluacion || []).slice(0, 3);
 
   return (
     <div className="min-h-screen bg-slate-200 flex justify-center font-sans">
@@ -71,67 +112,84 @@ export default function App() {
         >
           <div onClick={resetAll} className="cursor-pointer">
             <p className="text-xs uppercase tracking-wider opacity-80 font-semibold">
-              {MOCK_TEMA.grado}
+              {tema.grado}
             </p>
-            <h1 className="text-base font-bold leading-tight">
-              {MOCK_TEMA.titulo}
-            </h1>
+            <h1 className="text-base font-bold leading-tight">{tema.titulo}</h1>
           </div>
           <span className="bg-white/20 text-xs font-mono px-2.5 py-1 rounded-full">
-            {student ? student.name : MOCK_TEMA.codigo_clase}
+            {student ? student.name : tema.codigo_clase}
           </span>
         </header>
 
-        {step === "INGRESO" && (
-          <JoinScreen tema={MOCK_TEMA} onStart={handleStart} />
-        )}
+        {!temaActivo && step === "INGRESO" ? (
+          <div className="flex-1 p-6 flex flex-col justify-center items-center text-center gap-3">
+            <p className="text-lg font-bold text-slate-800">
+              Clase aún no habilitada
+            </p>
+            <p className="text-sm text-slate-600">
+              Espera a que tu docente active el tema de hoy en su panel.
+            </p>
+            <button
+              onClick={() => window.location.reload()}
+              className="mt-2 bg-blue-600 text-white px-5 py-2.5 rounded-xl font-semibold text-sm"
+            >
+              Verificar de nuevo
+            </button>
+          </div>
+        ) : (
+          <>
+            {step === "INGRESO" && (
+              <JoinScreen tema={tema} onStart={handleStart} />
+            )}
 
-        {step === "DIAGNOSTICO" && (
-          <QuizScreen
-            key="diag"
-            questions={MOCK_TEMA.diagnostico}
-            mode="diagnostico"
-            onFinish={handleDiagnosticFinish}
-          />
-        )}
+            {step === "DIAGNOSTICO" && (
+              <QuizScreen
+                key="diag"
+                questions={tema.diagnostico}
+                mode="diagnostico"
+                onFinish={handleDiagnosticFinish}
+              />
+            )}
 
-        {step === "MICROCLASE" && (
-          <MicroClassScreen
-            detectedErrors={detectedErrors}
-            microClases={MOCK_TEMA.micro_clases}
-            onFinish={() => setStep("MINIJUEGO")}
-          />
-        )}
+            {step === "MICROCLASE" && (
+              <MicroClassScreen
+                detectedErrors={detectedErrors}
+                microClases={tema.micro_clases}
+                onFinish={() => setStep("MINIJUEGO")}
+              />
+            )}
 
-        {step === "MINIJUEGO" && (
-          <MinigamePlaceholder onFinish={() => setStep("REEVALUACION")} />
-        )}
+            {step === "MINIJUEGO" && (
+              <MinigamePlaceholder onFinish={() => setStep("REEVALUACION")} />
+            )}
 
-        {step === "REEVALUACION" && (
-          <QuizScreen
-            key="reeval"
-            questions={reevalQuestions}
-            mode="reevaluacion"
-            onFinish={handleReevalFinish}
-          />
-        )}
+            {step === "REEVALUACION" && (
+              <QuizScreen
+                key="reeval"
+                questions={reevalQuestions}
+                mode="reevaluacion"
+                onFinish={handleReevalFinish}
+              />
+            )}
 
-        {step === "RESULTADOS" && (
-          <ResultsScreen
-            student={student}
-            diagResults={diagResults}
-            reevalResults={reevalResults}
-            onGoTutor={() => setStep("TUTOR_CASA")}
-            onReset={resetAll}
-          />
-        )}
+            {step === "RESULTADOS" && (
+              <ResultsScreen
+                student={student}
+                diagResults={diagResults}
+                reevalResults={reevalResults}
+                onGoTutor={() => setStep("TUTOR_CASA")}
+                onReset={resetAll}
+              />
+            )}
 
-        {step === "TUTOR_CASA" && (
-          <TutorModeScreen
-            detectedErrors={detectedErrors}
-            microClases={MOCK_TEMA.micro_clases}
-            onDone={resetAll}
-          />
+            {step === "TUTOR_CASA" && (
+              <TutorModeScreen
+                detectedErrors={detectedErrors}
+                microClases={tema.micro_clases}
+                onDone={resetAll}
+              />
+            )}
+          </>
         )}
       </div>
     </div>

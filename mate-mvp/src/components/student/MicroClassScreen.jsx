@@ -7,7 +7,24 @@ export default function MicroClassScreen({ detectedErrors, microClases, onFinish
   const [showHint, setShowHint] = useState(false);
 
   const errorId = detectedErrors[idx];
-  const clase = microClases[errorId];
+  const clase = microClases[errorId] || Object.values(microClases)[0];
+
+  // Compatible con pasos_visuales (array) o ejemplo_visual (string de P1)
+  const pasos = Array.isArray(clase.pasos_visuales)
+    ? clase.pasos_visuales
+    : clase.ejemplo_visual
+    ? [clase.ejemplo_visual]
+    : [];
+
+  // Compatible con opciones (array) o { correcta, distractor } de P1
+  const pg = clase.practica_guiada || {};
+  const opciones = Array.isArray(pg.opciones)
+    ? pg.opciones
+    : [
+        { texto: pg.correcta || "Opción correcta", correcta: true },
+        { texto: pg.distractor || "Opción incorrecta", correcta: false },
+      ];
+
   const isCorrect = selected?.correcta === true;
 
   const handleNext = () => {
@@ -35,18 +52,20 @@ export default function MicroClassScreen({ detectedErrors, microClases, onFinish
         {/* Tarjeta de teoría */}
         <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-3">
           <span className="inline-block bg-red-50 text-red-700 text-xs font-semibold px-2.5 py-1 rounded-full">
-            Detectamos dificultad en: {clase.nombre_corto}
+            Detectamos dificultad en: {clase.nombre_corto || errorId}
           </span>
           <h2 className="text-xl font-bold text-slate-800">{clase.titulo}</h2>
           <p className="text-sm text-slate-600 leading-relaxed">
             {clase.explicacion}
           </p>
 
-          <div className="bg-slate-900 text-emerald-300 font-mono text-sm rounded-xl p-4 space-y-1.5">
-            {clase.pasos_visuales.map((paso, i) => (
-              <p key={i}>{paso}</p>
-            ))}
-          </div>
+          {pasos.length > 0 && (
+            <div className="bg-slate-900 text-emerald-300 font-mono text-sm rounded-xl p-4 space-y-1.5">
+              {pasos.map((paso, i) => (
+                <p key={i}>{paso}</p>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Práctica guiada */}
@@ -55,11 +74,11 @@ export default function MicroClassScreen({ detectedErrors, microClases, onFinish
             Práctica guiada
           </p>
           <p className="text-sm font-semibold text-slate-800">
-            {clase.practica_guiada.pregunta}
+            {pg.pregunta}
           </p>
 
           <div className="space-y-2">
-            {clase.practica_guiada.opciones.map((op, i) => {
+            {opciones.map((op, i) => {
               const isPicked = selected === op;
               let style = "bg-white border-slate-300 text-slate-800";
               if (isPicked && op.correcta) {
@@ -86,7 +105,10 @@ export default function MicroClassScreen({ detectedErrors, microClases, onFinish
           {showHint && !isCorrect && (
             <div className="flex items-start gap-2 bg-amber-50 border border-amber-200 text-amber-800 text-xs p-3 rounded-xl">
               <Lightbulb className="w-4 h-4 shrink-0 mt-0.5" />
-              <p>{clase.practica_guiada.pista}</p>
+              <p>
+                {pg.pista ||
+                  "Revisa el ejemplo de arriba y recuerda aplicar la operación opuesta."}
+              </p>
             </div>
           )}
 
